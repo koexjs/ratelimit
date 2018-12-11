@@ -1,10 +1,10 @@
 {
-  "name": "@zcorky/koa-rate-limit",
+  "name": "@koex/ratelimit",
   "version": "0.0.1",
-  "description": "cahe hits for koa",
+  "description": "ratelimit for koa extend",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "repository": "https://github.com/zcorky/koa-rate-limit",
+  "repository": "https://github.com/koexjs/ratelimit",
   "author": "Zero",
   "license": "MIT",
   "scripts": {
