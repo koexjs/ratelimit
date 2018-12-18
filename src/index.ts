@@ -53,8 +53,8 @@ const createRateLimit = (options?: Options<string, Limit>) => {
   const getHeaders = (ctx: Context, limit: Limit) => {
     return {
       [headerNames.remaining]: `${limit.remaining}`,
-      [headerNames.reset]: `$limit.reset}`,
-      [headerNames.total]: `$limit.total}`,
+      [headerNames.reset]: `${limit.reset}`,
+      [headerNames.total]: `${limit.total}`,
     };
   };
 
