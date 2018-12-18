@@ -212,7 +212,7 @@ describe('ratelimit middleware', () => {
       await request(app.listen())
         .get('/')
         .set('foo', 'biz')
-        .expect(200, 'biz');
+        .expect(429);
     });
   });
 

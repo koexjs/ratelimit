@@ -65,7 +65,7 @@ const createRateLimit = (options?: Options<string, Limit>) => {
   };
 
   const initialLimiter = {
-    remaining: max - 1,
+    remaining: max,
     reset: Date.now() + duration,
     total: max,
   }
@@ -79,46 +79,33 @@ const createRateLimit = (options?: Options<string, Limit>) => {
     const key = getKey(ctx);
     if (key === false) return next();
 
-    const limiter = await db.get(key);
+    let limiter = await db.get(key);
 
     // @initial, no limiter for key
     if (!limiter) {
-      await db.set(key, initialLimiter);
-
-      setHeaders(ctx, initialLimiter);
-      return next();
+      limiter = initialLimiter;
+      await db.set(key, limiter);
     }
+
+    // @remaining decrease
+    const calls = limiter.remaining > 0 ? limiter.remaining - 1 : 0;
+
+    // @reset
+    const delta = limiter.reset - Date.now() | 0;
+    if (delta < 0) {
+      reset(limiter);
+    }
+
+    // @header set
+    setHeaders(ctx, {
+      ...limiter,
+      remaining: calls,
+    });
 
     // @remaining > 0
     debug('remaining %s/%s %s', limiter.remaining, limiter.total, key);
-    if (limiter.remaining > 0) {
+    if (limiter.remaining) {
       limiter.remaining -= 1;
-
-      // auto reset 
-      const delta = limiter.reset - Date.now() | 0;
-      if (delta < 0) {
-        reset(limiter);
-      }
-
-      // decrease remaining
-      setHeaders(ctx, limiter);
-      return next();
-    }
-
-    // @remaining === 0
-    setHeaders(ctx, {
-      remaining: 0,
-      total: limiter.total,
-      reset: limiter.reset,
-    });
-
-    // @remaining <= 0
-    
-    // @reset
-    const delta = limiter.reset - Date.now() | 0;
-    if (delta <= -duration) {
-      reset(limiter);
-      setHeaders(ctx, limiter);
       return next();
     }
 
