@@ -12,7 +12,7 @@
     "clean": "rimraf -rf lib",
     "test": "NODE_ENV=test nyc mocha test/*.spec.ts test/**/*.spec.ts --exit --timeout 10000",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/debug": "^0.0.31",
@@ -26,6 +26,7 @@
     "chai-spies": "^1.0.0",
     "coveralls": "^3.0.2",
     "global": "^4.3.2",
+    "husky": "^1.2.1",
     "koa": "^2.6.2",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
@@ -38,11 +39,16 @@
     "tslint": "^5.10.0",
     "tslint-eslint-rules": "^5.3.1",
     "tslint-jsdoc-rules": "^0.1.2",
-    "typescript": "^3.1.1"
+    "typescript": "^3.2.2"
   },
   "files": [
     "lib/"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
+  },
   "nyc": {
     "check-coverage": true,
     "include": [
