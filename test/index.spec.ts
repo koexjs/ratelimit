@@ -79,7 +79,7 @@ describe('ratelimit middleware', () => {
 
     app.use(ratelimit({
       db,
-      duration,
+      duration: 100000,
       max,
       throw: true,
     }));

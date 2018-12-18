@@ -93,6 +93,13 @@ const createRateLimit = (options?: Options<string, Limit>) => {
     debug('remaining %s/%s %s', limiter.remaining, limiter.total, key);
     if (limiter.remaining > 0) {
       limiter.remaining -= 1;
+
+      // auto reset 
+      const delta = limiter.reset - Date.now() | 0;
+      if (delta < 0) {
+        reset(limiter);
+      }
+
       // decrease remaining
       setHeaders(ctx, limiter);
       return next();
