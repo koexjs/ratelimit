@@ -75,7 +75,7 @@ const createRateLimit = (options?: Options<string, Limit>) => {
     limit.reset = Date.now() + duration;
   };
 
-  return async function koaRateLimit (ctx: Context, next: () => Promise<any>) {
+  return async function koexRateLimit (ctx: Context, next: () => Promise<any>) {
     const key = getKey(ctx);
     if (key === false) return next();
 
